@@ -1,5 +1,6 @@
 (function ($) {
     "use strict";
+    var log = ((c_log) ? c_log : alert);
     var paging = {}, data= [],
         private_methods = {
 
@@ -22,14 +23,15 @@
                         private_methods.cooltransition(container);
                     },
                     error: function(error) {
-                       private_methods.error_handler(container, error.responseJSON.error.message);
+                       var err = ((error.responseJSON && error.responseJSON.error) ? error.responseJSON.error.message : "");
+                       private_methods.error_handler(container, err);
                     }
                 }); 
             },
 
             error_handler : function(container, message){
-                $(".err").html("Error while loading new image");
-                console.log(message);
+                $(".err", container).html("Error while loading new image");
+                log(message);
                 container.show();
             },
 
@@ -101,7 +103,7 @@
                 } else {
                     $(".bp_left_arrow", container).hide();
                 }
-            },
+            }
         },
 
         methods = {

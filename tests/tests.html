@@ -4,6 +4,7 @@
   <title>Refactored date examples</title>
   <link rel="stylesheet" href="../lib/qunit-1.12.0.css">
   <script type="text/javascript" src="../lib/jquery-1.10.2.min.js"></script>
+  <script type="text/javascript" src="../lib/custom_log.js"></script>
   <script src="../lib/qunit-1.12.0.js"></script>
   <script src="../src/fb_gallery.js"></script>
   <script>
@@ -82,7 +83,7 @@
     	var setup = { 
     		option:"success", 
     	    fields: { 
-                data: jQuery.parseJSON(rJson_all_correct).data,
+                data: jQuery.parseJSON(rJson_all_correct).data
     	    }
     	};
         ajaxCall(fb_options, setup);
