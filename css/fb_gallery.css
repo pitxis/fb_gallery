@@ -4,27 +4,32 @@
 }
 .bigPic_img {
 	max-height: 600px;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
 }
 .bp_right_arrow{
 	position: absolute;
 	right: 0;
-	height: 100%;
+	height: 50px;
 	text-align: center;
-	width: 50px;
-	opacity: 0;
+	width: 30px;
+	opacity: 0.1;
 	background-color: #333;
 	cursor: pointer;
-}
+	top: 50%;
+	}
 
 .bp_left_arrow{
 	position: absolute;
 	left: 0;
-	height: 100%;
+	height: 50px;
 	text-align: center;
-	width: 50px;
-	opacity: 0;
+	width: 30px;
+	opacity: 0.1;
 	background-color: #333;
 	cursor: pointer;
+	top: 50%;
 	-webkit-transform:scaleX(-1);
     -moz-transform:scaleX(-1);
     -ms-transform:scaleX(-1);
@@ -42,12 +47,12 @@
 
 .bp_right_arrow img{
 	position: relative;
-	top: 50%;
+	top: 3px;
 }
 
 .bp_left_arrow img{
 	position: relative;
-	top: 50%;
+	top: 3px;
 }
 
 .bp_title {
@@ -55,16 +60,37 @@
 	font-weight: bold;
 	line-height: 1.2;
 	font-size: 18px;
-	color: #f3f3f3;
 	position: absolute;
-	margin-top: 20px;
+	width: 100%;
+	height: 25px;
+	background-color: transparent;
+	opacity: 0.1;
 }
 
-.bp_like {
+.bp_title:hover {
+	opacity: 0.4;
+}
+
+.fb_like {
+    position: absolute;
+    right: 10px;
+}
+
+.bt_like {
 	float: left;
 	margin-left: 10px;
+	cursor: pointer;
+	white-space: nowrap;
+}
+.bt_like:hover{
+	color:#3b5998;
+}
+.num_likes {
+	float: left;
+margin-left: 10px;
 }
 .bp_name {
 	float: left;
 	margin-left: 10px;
+
 }
