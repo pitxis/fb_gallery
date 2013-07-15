@@ -7,10 +7,8 @@
 }
 
 .bigPic {
-	
 	position: relative;
 	background-color: #aaa;
-
 }
 .bigPic_img {
 	max-height: 600px;
