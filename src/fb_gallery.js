@@ -206,7 +206,7 @@
                     c_log(settings.fb_result);
                     private_methods.get_fb.call($this, settings.albumId, settings.fb_result.userID, "construct");
                 });
-            },
+            }, 
 
             destroy: function() {
                 $(this).html(" ");
