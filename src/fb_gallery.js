@@ -99,7 +99,6 @@
                                 $(".bp_left_arrow", $this).hide();
                             }
                             
-                            c_log(" img loaded");
                        });
                     });
                 }
@@ -127,8 +126,7 @@
             bp_arrows: function(call_side, user_id, caller) {
 
                 var bt = caller, $this = this;
-                c_log(bt +"  hidden");
-                $this.find("."+bt).hide();
+                $this.find("." + bt).hide();
 
                 $(".bigPic_img", this).animate({
                     opacity: 0.25
@@ -189,8 +187,12 @@
                 var $this = $(this);
                 $this.append($("<div class='err'/></div>"));
                 
-                if(!(settings.albumId && settings.size) || (typeof settings.size !== 'number' && settings.size % 1 != 0) )  {
+                if(!(settings.albumId && settings.size) || 
+                    (typeof settings.size !== 'number' && settings.size % 1 != 0) || 
+                    !(settings.fb_result && settings.fb_result.userID && settings.fb_result.accessToken ) )  {
+                    
                     $(".err", $this).html("Options error");
+                    return; 
                 }
 
                 return this.each(function(){

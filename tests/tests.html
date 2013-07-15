@@ -13,18 +13,26 @@
 
     var rJson_invalid_next = '{"data":[{"id": "431524810279212","name": "Teste desc","picture": "http://photos-b.ak.fbcdn.net/hphotos-ak-frc1/995669_431524810279212_2099409515_s.jpg","source": "http://sphotos-b.ak.fbcdn.net/hphotos-ak-frc1/s720x720/995669_431524810279212_2099409515_n.jpg","likes": {"data": [{"id": "431470333617993","name": "LOL"}],"paging": {"cursors": {"after": "NDMxNDcwMzMzNjE3OTkz","before": "NDMxNDcwMzMzNjE3OTkz"}}}}],"paging": {"cursors": {"after": "NDMxNTI0ODEwMjc5MjEy","before": "NDMxNTI0ODEwMjc5MjEy"},"next": "lkasjdakjssssss"}}';
     
+    var response = {
+        accessToken: "CAAH6SLLZCUzwBAI50lgCEZA4NPStq5kDMAsxcQpDI3y7vXUG09dU23ZCUZB3Sk5s9FtZCy3QN5F87CUHlifmbc9AogIsYdjUYuDf7IJO1wm809uRunZBZCeZBJE5zRaWsq9oxws5VZCa33AakEbrUANQKSOEX6ZBVl1c8ZD",
+        userID: "100000800733606"
+    };
+
     var rJson_error = '{ "error":{ "message": "no token" }}'
-    var fb_options = {albumId: "431474656950894", size: "1"};
+    var fb_options = {albumId: "431474656950894", size: "1", fb_result: response};
     
     function ajaxCall(p_options, setup, target) {  
         var options = null;
+
         jQuery.ajax = function (param) {
             options = param;
         };
         
         if(target !== "undefined")
         	$("#gallery").fb_gallery("init", p_options);
-        options[setup.option](setup.fields);
+        
+        if(options)
+            options[setup.option](setup.fields);
 	};
 
     test("options test", function(){
@@ -43,12 +51,14 @@
         }
 
         checkOut({}, ".err", "Options error");
-        checkOut({albumId: "1000", size: ""}, ".err", "Options error");
-        checkOut({albumId: "", size: ""}, ".err", "Options error");
-        checkOut({albumId: "", size: "1"}, ".err", "Options error");
-        checkOut({albumId: "b", size: "a"}, ".err", "Options error");
-        checkOut({albumId: "431474656950894", size: ""}, ".err", "Options error");
-        checkOut({albumId: "431474656950894", size: "1"}, ".err", "");
+        checkOut({albumId: "1000", size: "", fb_result: response}, ".err", "Options error");
+        checkOut({albumId: "", size: "", fb_result: response}, ".err", "Options error");
+        checkOut({albumId: "", size: "1", fb_result: response}, ".err", "Options error");
+        checkOut({albumId: "b", size: "a", fb_result: response}, ".err", "Options error");
+        checkOut({albumId: "431474656950894", size: "", fb_result: response}, ".err", "Options error");
+        checkOut({albumId: "431474656950894", size: "1", fb_result: response}, ".err", "");
+        checkOut({albumId: "431474656950894", size: "1", fb_result:  {accessToken: "CAAH6SLLZCUzwBAI50lgCEZA4NPStq5kDMAsxcQpDI3y7vXUG09dU23ZCUZB3Sk5s9FtZCy3QN5F87CUHlifmbc9AogIsYdjUYuDf7IJO1wm809uRunZBZCeZBJE5zRaWsq9oxws5VZCa33AakEbrUANQKSOEX6ZBVl1c8ZD"}}, ".err", "Options error");
+        checkOut({albumId: "431474656950894", size: "1", fb_result: {userID: "100000800733606"}}, ".err", "Options error");
     });
     
 
@@ -115,7 +125,7 @@
 
         ajaxCall(fb_options, setup, $('#gallery'));
 
-	    $('#gallery').trigger('bp_next', this);
+	    $('#gallery').trigger('bp_next', "bp_right_arrow");
 	    equal($('.err').html(), "Error while loading new image");
 	    equal($('.bigPic_img').attr("src"), img_before_error);
 	    $("#gallery").fb_gallery("destroy");
@@ -139,8 +149,8 @@
     	    }
     	};
         ajaxCall(fb_options, setup, $('#gallery'));
-        $('#gallery').trigger('bp_next', this);
-        $('#gallery').trigger('bp_before', this);
+        $('#gallery').trigger('bp_next', "bp_right_arrow");
+        $('#gallery').trigger('bp_before', "bp_left_arrow");
         equal($('.bp_right_arrow').css("display"), "none", "right arrow hide");
         equal($('.bp_left_arrow').css("display"), "none", "left arrow hide");
         $("#gallery").fb_gallery("destroy");
