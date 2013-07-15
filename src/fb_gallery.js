@@ -56,7 +56,7 @@
 
                 var big_pic = $("<div class='bigPic'>"),
                     img = data.imgs;
-
+ 
                 paging = data.paging;
 
                 big_pic.append("<div class='bp_right_arrow' idx='0'" + ((data.paging.next) ? "" : "style='display:none'" )  + " ><img src='../assets/arrow.png' /></div>");
@@ -74,31 +74,36 @@
                     elem_img = $(".bigPic_img", this);
 
                 paging = data.paging;
-                 
-                elem_img.load(function(){
-                    elem_img.animate({
-                        opacity: 1
-                    },500, function() {
-                        $(".bp_name", $this).html( ((img.name) ? img.name : "") );
-                        $(".bt_like", $this).attr("ph_id", img.id);
-                        $(".num_likes", $this).html( ((img.likes) ? img.likes.length : 0) );
-                        
-                        if (paging.next) {
-                            $(".bp_right_arrow", $this).show();
-                        } else {
-                            $(".bp_right_arrow", $this).hide();
-                        }
 
-                        if (paging.before) {
-                            $(".bp_left_arrow", $this).show();
-                        } else {
-                            $(".bp_left_arrow", $this).hide();
-                        }
-                   });
-                });
-                elem_img.attr("src", img.pic);
-               
                 
+                if (!($._data($(".bigPic_img")[0], "events") && $._data($(".bigPic_img")[0], "events")["load"])) {
+                    elem_img.load(function(){
+                        elem_img.animate({
+                            opacity: 1
+                        },500, function() {
+                            $(".bp_name", $this).html( ((img.name) ? img.name : "") );
+                            $(".bt_like", $this).attr("ph_id", img.id);
+                            $(".num_likes", $this).html( ((img.likes) ? img.likes.length : 0) );
+                            
+                            if (paging.next) {
+                                c_log(".bp_right_arrow show");
+                                $(".bp_right_arrow", $this).show();
+                            } else {
+                                $(".bp_right_arrow", $this).hide();
+                            }
+
+                            if (paging.before) {
+                                c_log(".bp_left_arrow show");
+                                $(".bp_left_arrow", $this).show();
+                            } else {
+                                $(".bp_left_arrow", $this).hide();
+                            }
+                            
+                            c_log(" img loaded");
+                       });
+                    });
+                }
+                elem_img.attr("src", img.pic);
             },
 
             checkLike: function(user_id, img_id, likes){
@@ -113,7 +118,6 @@
                         }
                     }
                 }
-
                 this.find(".fb_like").html(tmp_div);
             },
 
@@ -123,6 +127,7 @@
             bp_arrows: function(call_side, user_id, caller) {
 
                 var bt = caller, $this = this;
+                c_log(bt +"  hidden");
                 $this.find("."+bt).hide();
 
                 $(".bigPic_img", this).animate({
