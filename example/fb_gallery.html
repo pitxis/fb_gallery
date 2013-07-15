@@ -17,7 +17,7 @@
                 console.log(result);
                 
                 if(result.status === "connected")
-                    $("#gallery").fb_gallery("init", {albumId: "431474656950894", size: "1", access_token: result.authResponse.accessToken});  
+                    $("#gallery").fb_gallery("init", {albumId: "431474656950894", size: "1", fb_result: result.authResponse});  
             }
 
         </script>
