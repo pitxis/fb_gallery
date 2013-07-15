@@ -181,14 +181,13 @@
         methods = {
             init: function(options) {
                 var settings = $.extend({
-                    size: 1
+                    albumId : ""
                 }, options);
 
                 var $this = $(this);
                 $this.append($("<div class='err'/></div>"));
                 
-                if(!(settings.albumId && settings.size) || 
-                    (typeof settings.size !== 'number' && settings.size % 1 != 0) || 
+                if(settings.albumId === "" ||
                     !(settings.fb_result && settings.fb_result.userID && settings.fb_result.accessToken ) )  {
                     
                     $(".err", $this).html("Options error");

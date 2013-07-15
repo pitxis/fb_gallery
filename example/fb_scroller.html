@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>	
+    <head>
+        <script type="text/javascript" src="../lib/jquery-1.10.2.min.js"></script>
+        <script type="text/javascript" src="../lib/custom_log.js"></script>
+        <script type="text/javascript" src="../src/fb_scroller.js"></script>
+        <link rel="stylesheet" type="text/css" href="../css/fb_scroller.css" />
+    </head>
+    <body style="margin: 0px">
+        <div id="gallery" style="width:700px;"></div>
+        <div id="b_pic" style="width:400px;"></div>
+        <script type="text/javascript">
+
+    $("#gallery").fb_scroller("init", {albumId: "431474656950894", size: "4", target:"b_pic"});
+
+     /*  var result = null;
+            var updateStatusCallback =  function (r){
+                result = r;
+                console.log(result);
+                
+                if(result.status === "connected")
+                    $("#gallery").fb_gallery("init", {albumId: "431474656950894", size: "1", fb_result: result.authResponse});  
+            }
+        */
+        </script>
+    </body>
+</html>
