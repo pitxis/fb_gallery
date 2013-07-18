@@ -11,14 +11,14 @@
         <div id="gallery" style="width:700px;"></div>
         <script type="text/javascript">
 
-        var result = null;
-            var updateStatusCallback =  function (r){
-                result = r;
-                console.log(result);
+        //var result = null;
+        //   var updateStatusCallback =  function (r){
+        //        result = r;
+        //        console.log(result);
                 
-                if(result.status === "connected")
-                    $("#gallery").fb_gallery("init", {albumId: "431474656950894", size: "1", fb_result: result.authResponse});  
-            }
+         //       if(result.status === "connected")
+        $("#gallery").fb_gallery("init", {albumId: "431474656950894", fb_api: true});  
+         //   }
 
         </script>
     </body>
