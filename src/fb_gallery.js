@@ -18,6 +18,11 @@
                         if ((result && result.data) && result.data.length > 0) { 
                             var data = private_methods.parse_fb(result);
                             private_methods[callB].call($this, fb_api, data);
+                            
+                            if(fb_api) {   
+                                $(".fb_like", $this).update_data(data.imgs.id, data.imgs.likes);
+                            }
+                                
                         } else {
                             private_methods.error_handler("Sorry, no results found!!!");
                         }
@@ -55,32 +60,26 @@
             construct: function (fb_api, data) {
 
                 var big_pic = $("<div class='bigPic'>"),
-                    img = data.imgs, result = "null", fb_like_div, fb_login_div, title_div;
+                    img = data.imgs, fb_like_div = "", title_div;
  
                 this.paging = data.paging;
+
+                if(fb_api){
+                    if($.fn.fb_button_plugin){
+                        fb_like_div = $("<div>").attr("class", "fb_like").fb_button_plugin();
+                    } else {
+                        c_log("No fb_utilities loaded")
+                    }
+                }
 
                 big_pic.append("<div class='bp_right_arrow' idx='0'" + ((data.paging.next) ? "" : "style='display:none'" )  + " ><img src='../assets/arrow.png' /></div>");
                 big_pic.append("<div class='bp_left_arrow' style='display:none' idx='0'><img src='../assets/arrow.png'  /></div>");
                 title_div = $("<div class='bp_title'><div class='bp_name'>" + img.name + "</div></div>");
-                
-                
-                if (fb_api && (FB && FB.checkStatus)) { 
-                    fb_like_div = $("<div class='fb_like'></div>");
-                    if (result = FB.checkStatus()) {
-                        private_methods.setup_like_button.call(this, img.id, data.imgs.likes);
-                    } else { 
-                        fb_login_div = $("<div class='fb_login'>Login</div> to like this picture"); 
-                        private_methods.bind_login_button.call(this, fb_login_div, img.id, data.imgs.likes);
-                        fb_like_div.append(fb_login_div);
-                    }
-                    title_div.append(fb_like_div);
-                }
-
-                
-                big_pic.append(title_div);
-                big_pic.append($("<img class='bigPic_img' src='" + img.pic + "' style='max-width:" + this.width() + "px' />"));
+                big_pic.append(title_div.append(fb_like_div));
+                big_pic.append($("<img class='bigPic_img' img_id='"+ img.id +"' src='" + img.pic + "' style='max-width:" + this.width() + "px' />"));
                 big_pic.append($(".err", this));
                 this.html(big_pic);
+
                 private_methods.bindButtons.call(this);
             },
 
@@ -90,10 +89,6 @@
                     elem_img = $(".bigPic_img", this);
 
                 this.paging = data.paging;
-                
-                if (fb_api && user) { 
-                    private_methods.setup_like_button.call($this, img.id, img.likes);
-                }
 
                 $(".bp_name",$this).html( ( !(img.name) ? "" : img.name) );
 
@@ -124,26 +119,6 @@
                 elem_img.attr("src", img.pic);
             },
 
-            setup_like_button: function(img_id, likes){
-
-                var tmp_div = $("<div class='bt_like' ph_id='" + img_id +"'>Like</div><div class='num_likes'>" + ((likes) ? likes.length : 0) + "</div>");
-                
-                private_methods.bind_like_button.call(this, $(tmp_div[0]));
-
-                
-                if (likes) { 
-                    for (var i = 0; i < likes.length; i++) {
-                        if (likes[i].id === user.userID) {
-                            tmp_div.html("You and "+ likes.length +" already liked").attr("class", "bt_liked");
-                            break;
-                        }
-                    }
-                }
-
-                
-                this.find(".fb_like").html(tmp_div);
-            },
-
             bp_arrows: function(fb_api, call_side, caller) {
 
                 var bt = caller, $this = this;
@@ -158,65 +133,6 @@
                 });
             },
             
-            fb_callback: function(response, args){
-
-                var result = {};
-
-                if(response.status === "connected"){
-                    user =  {"userID": response.authResponse.userID, "accessToken": response.authResponse.accessToken };
-                    private_methods.setup_like_button.call(this, args.id, args.likes);
-                } 
-                return null;
-            },
-
-            fb_login: function() {
-                if(FB && FB.doLogin){
-                    FB.doLogin.call(this, private_methods.fb_callback, arguments[0]);
-                }
-            },
-
-            fb_like: function(access_token){
-
-                var ph_id = $(".bt_like", this).attr("ph_id");
-                var $this = this;
-
-                $.ajax({
-                    url: 'https:' + '//graph.facebook.com/'+ ph_id +'/likes?access_token=' + user.accessToken,
-                    cache:false,
-                    method:"post",
-                    success: function(r){
-                        c_log(r);
-                        var numb = $(".num_likes", $this).html();
-                        $(".fb_like", $this).html("You and "+ numb +" already liked");
-                    },
-                    error: function(r){
-                        c_log(r);
-                    }
-                });
-            },
-
-            bind_login_button: function(login_div, img_id, likes){
-                
-                var $this = this;
-                
-                login_div.click(function(event) {
-                    event.preventDefault();
-                    $this.trigger('login', {"id": img_id, "likes": likes});
-                });
-            },
-
-            bind_like_button: function(like_div){
-                
-                var $this = this;
-                
-                if(!($._data(like_div, "click"))) { 
-                    like_div.click(function(event) {
-                        event.preventDefault();
-                        $this.trigger('like');
-                    });
-                }
-            },
-
             bindButtons: function() {
 
                 var $this = this;
@@ -259,18 +175,9 @@
                     });
                     
                     
-                    if (settings.fb_api && fb_start && (FB === "undefined") ) {
-                        //start facebbok api
-                        fb_start(private_methods.get_fb, 
-                            {"caller": $this, 
-                            "albumId": settings.albumId, 
-                            "fb_api": settings.fb_api, 
-                            "callB": "construct"
-                        }); 
-                    } else {
-                        private_methods.get_fb.call($this, settings.albumId, settings.fb_api, "construct");
-                    }
 
+                    private_methods.get_fb.call($this, settings.albumId, settings.fb_api, "construct");
+                    
                 });
             }, 
 
